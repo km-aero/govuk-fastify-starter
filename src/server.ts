@@ -55,6 +55,7 @@ export async function buildApp(opts: any = {}) {
   await app.register(fastifyStatic, {
     root: path.join(process.cwd(), 'public'),
     prefix: '/',
+    maxAge: '1d',
   });
 
   // Register Routes
