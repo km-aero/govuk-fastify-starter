@@ -69,7 +69,13 @@ npm run db:push
 npm run db:seed
 ```
 
-### 5. Start the development server
+### 5. Build the CSS
+
+```bash
+npm run build
+```
+
+### 6. Start the development server
 
 ```bash
 npm run dev
