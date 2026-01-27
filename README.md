@@ -123,14 +123,31 @@ govuk-fastify-starter/
 | `npm run db:push` | Push schema changes to database |
 | `npm run db:seed` | Seed database |
 | `npm run db:studio` | Open Prisma Studio GUI |
+| `npm run test` | Run unit and integration tests (Vitest) |
+| `npm run test:watch` | Run unit tests in watch mode |
 | `npm run test:e2e` | Run end-to-end tests (Playwright) |
 | `npm run test:a11y` | Run accessibility tests |
 
 ## Testing
 
+### Unit & Integration (Vitest)
+
+We use **Vitest** for unit and component/integration testing.
+
+- **Unit Tests**: Located in `tests/unit/`. Test individual functions and schemas (e.g., Zod validation).
+- **Integration Tests**: Located in `tests/integration/`. Test API routes and server logic using `fastify.inject()` and mocked database calls.
+
+```bash
+# Run all unit/integration tests
+npm test
+
+# Run in watch mode
+npm run test:watch
+```
+
 ### End-to-End & Accessibility (Playwright)
 
-We use Playwright for end-to-end testing and `axe-core` for accessibility auditing.
+We use **Playwright** for end-to-end testing and `axe-core` for accessibility auditing.
 
 ```bash
 # Run all E2E tests

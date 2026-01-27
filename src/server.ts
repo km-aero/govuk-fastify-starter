@@ -33,52 +33,60 @@ const options = {
   data: process.env // Explicitly pass process.env to validate it
 };
 
-async function main() {
-  try {
-    const server = Fastify({
-      logger: process.env.NODE_ENV === 'development' ? {
-        transport: {
-          target: 'pino-pretty',
-          options: {
-            translateTime: 'HH:MM:ss Z',
-            ignore: 'pid,hostname',
-          },
+export async function buildApp(opts: any = {}) {
+  const app = Fastify({
+    logger: process.env.NODE_ENV === 'development' ? {
+      transport: {
+        target: 'pino-pretty',
+        options: {
+          translateTime: 'HH:MM:ss Z',
+          ignore: 'pid,hostname',
         },
-      } : true,
-    });
+      },
+    } : true,
+    ...opts
+  });
 
-    // Register Plugins
-    await server.register(fastifyEnv, options);
-    await server.register(fastifyFormbody);
-    await server.register(nunjucksPlugin);
+  // Register Plugins
+  await app.register(fastifyEnv, options);
+  await app.register(fastifyFormbody);
+  await app.register(nunjucksPlugin);
 
-    // Register Static Files
-    // Serve public assets
-    await server.register(fastifyStatic, {
-      root: path.join(process.cwd(), 'public'),
-      prefix: '/',
-    });
+  // Register Static Files
+  // Serve public assets
+  await app.register(fastifyStatic, {
+    root: path.join(process.cwd(), 'public'),
+    prefix: '/',
+  });
 
-    // Register Routes
-    await server.register(indexRoutes);
-    await server.register(exampleFormRoutes);
+  // Register Routes
+  await app.register(indexRoutes);
+  await app.register(exampleFormRoutes);
 
-    // Basic health check
-    server.get('/health', async () => ({ status: 'ok' }));
-    
-    // Wait for plugins to be ready (load env)
-    await server.ready();
+  // Basic health check
+  app.get('/health', async () => ({ status: 'ok' }));
 
-    // Start server
-    // @ts-ignore - config is added by fastify-env
-    const port = server.config.PORT;
-    // @ts-ignore - config is added by fastify-env
-    await server.listen({ port, host: '0.0.0.0' });
-    console.log(`Server listening at http://localhost:${port}`);
-  } catch (err) {
-    console.error(err);
-    process.exit(1);
-  }
+  return app;
 }
 
-main();
+if (import.meta.url === `file://${process.argv[1]}`) {
+  (async () => {
+    try {
+      const server = await buildApp();
+      
+      // Wait for plugins to be ready (load env)
+      await server.ready();
+
+      // Start server
+      // @ts-ignore - config is added by fastify-env
+      const port = server.config.PORT;
+      // @ts-ignore - config is added by fastify-env
+      await server.listen({ port, host: '0.0.0.0' });
+      console.log(`Server listening at http://localhost:${port}`);
+    } catch (err) {
+      console.error(err);
+      process.exit(1);
+    }
+  })();
+}
+
