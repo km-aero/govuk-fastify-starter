@@ -4,8 +4,6 @@ import fastifyStatic from '@fastify/static';
 import fastifyFormbody from '@fastify/formbody';
 import fastifyEnv from '@fastify/env';
 import nunjucksPlugin from './plugins/nunjucks.js';
-import indexRoutes from './routes/index.js';
-import exampleFormRoutes from './routes/example-form.js';
 
 
 const schema = {
@@ -30,7 +28,7 @@ const schema = {
 const options = {
   confKey: 'config',
   schema: schema,
-  data: process.env // Explicitly pass process.env to validate it
+  dotenv: true // Load .env if present, but don't fail if missing (handled by library/schema validation)
 };
 
 export async function buildApp(opts: any = {}) {
@@ -60,7 +58,10 @@ export async function buildApp(opts: any = {}) {
   });
 
   // Register Routes
+  const { default: indexRoutes } = await import('./routes/index.js');
   await app.register(indexRoutes);
+
+  const { default: exampleFormRoutes } = await import('./routes/example-form.js');
   await app.register(exampleFormRoutes);
 
   // Basic health check
