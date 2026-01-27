@@ -1,5 +1,6 @@
 import Fastify, { FastifyInstance } from 'fastify';
 import path from 'path';
+import fastifyCompress from '@fastify/compress';
 import fastifyStatic from '@fastify/static';
 import fastifyFormbody from '@fastify/formbody';
 import fastifyEnv from '@fastify/env';
@@ -49,6 +50,7 @@ export async function buildApp(opts: any = {}) {
 
   // Register Plugins
   await app.register(fastifyEnv, options);
+  await app.register(fastifyCompress);
   await app.register(fastifyFormbody);
   await app.register(nunjucksPlugin);
 
