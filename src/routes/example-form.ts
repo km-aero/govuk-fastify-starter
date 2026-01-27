@@ -44,6 +44,7 @@ export default async function (fastify: FastifyInstance) {
         });
 
         if (errorMessages && errorMessages.length > 0) {
+          // eslint-disable-next-line security/detect-object-injection
           fieldErrors[fieldName] = { text: errorMessages[0] };
         }
       }

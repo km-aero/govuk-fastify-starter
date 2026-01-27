@@ -269,6 +269,19 @@ We use **Fastify Env** for environment variable validation and loading.
 
 This runs the compiled code from the `dist/` directory.
 
+## Security
+
+### Vulnerability Auditing
+
+This project uses `audit-ci` to check for security vulnerabilities in dependencies.
+
+```bash
+# Run security audit
+npm run security:audit
+```
+
+This command will fail if any high or critical vulnerabilities are found.
+
 ## Contributing
 
 1. Fork the repository

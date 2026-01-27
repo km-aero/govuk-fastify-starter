@@ -1,0 +1,5 @@
+{
+  // fail build on high or critical vulnerabilities
+  "high": true,
+  "critical": true
+}

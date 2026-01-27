@@ -1,3 +1,4 @@
+/* eslint-disable security/detect-non-literal-fs-filename */
 /**
  * Script to copy GOV.UK Frontend assets (fonts, images, js) to the public directory.
  *
