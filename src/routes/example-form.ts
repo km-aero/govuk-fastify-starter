@@ -34,15 +34,17 @@ export default async function (fastify: FastifyInstance) {
       const errorSummary: { href: string; text: string }[] = [];
       const fieldErrors: Record<string, { text: string }> = {};
 
-      for (const [key, msgs] of Object.entries(errors)) {
-        const text = msgs?.[0] || 'Invalid value';
+      // Iterate once to build both error summary and field errors
+      for (const [fieldName, errorMessages] of Object.entries(errors)) {
+        const errorMessage = errorMessages?.[0] || 'Invalid value';
+
         errorSummary.push({
-          href: `#${key}`,
-          text: text,
+          href: `#${fieldName}`,
+          text: errorMessage,
         });
 
-        if (msgs && msgs.length > 0) {
-          fieldErrors[key] = { text: msgs[0] };
+        if (errorMessages && errorMessages.length > 0) {
+          fieldErrors[fieldName] = { text: errorMessages[0] };
         }
       }
 
