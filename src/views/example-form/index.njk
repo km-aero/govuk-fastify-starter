@@ -1,0 +1,113 @@
+{% extends "layout.njk" %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+{% block pageTitle %}
+  {% if errorSummary %}Error: {% endif %}Contact us - {{ serviceName }} - GOV.UK
+{% endblock %}
+
+{% block beforeContent %}
+  {{ govukBackLink({
+    text: "Back",
+    href: "/"
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      
+      {% if errorSummary %}
+        {{ govukErrorSummary({
+          titleText: "There is a problem",
+          errorList: errorSummary,
+          attributes: { role: "alert" }
+        }) }}
+      {% endif %}
+
+      <h1 class="govuk-heading-xl">Contact us</h1>
+
+      <form action="/example-form" method="post" novalidate>
+        
+        {{ govukInput({
+          label: {
+            text: "Full name",
+            classes: "govuk-label--m"
+          },
+          id: "fullName",
+          name: "fullName",
+          value: values.fullName,
+          errorMessage: errors.fullName
+        }) }}
+
+        {{ govukInput({
+          label: {
+            text: "Email address",
+            classes: "govuk-label--m"
+          },
+          hint: {
+            text: "We will use this to contact you"
+          },
+          id: "email",
+          name: "email",
+          type: "email",
+          autocomplete: "email",
+          value: values.email,
+          errorMessage: errors.email
+        }) }}
+
+        {{ govukSelect({
+            id: "subject",
+            name: "subject",
+            label: {
+                text: "What is your message about?",
+                classes: "govuk-label--m"
+            },
+            items: [
+                {
+                  value: "",
+                  text: "Choose a subject",
+                  selected: true
+                },
+                {
+                  value: "general",
+                  text: "General enquiry",
+                  selected: values.subject == "general"
+                },
+                {
+                  value: "complaint",
+                  text: "Complaint",
+                  selected: values.subject == "complaint"
+                },
+                {
+                  value: "feedback",
+                  text: "Feedback",
+                  selected: values.subject == "feedback"
+                }
+            ],
+            errorMessage: errors.subject
+        }) }}
+
+        {{ govukTextarea({
+          name: "message",
+          id: "message",
+          label: {
+            text: "Message",
+            classes: "govuk-label--m"
+          },
+          value: values.message,
+          errorMessage: errors.message
+        }) }}
+
+        {{ govukButton({
+          text: "Submit"
+        }) }}
+
+      </form>
+    </div>
+  </div>
+{% endblock %}

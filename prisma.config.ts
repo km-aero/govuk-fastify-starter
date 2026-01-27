@@ -7,11 +7,8 @@
  * @see https://www.prisma.io/docs/orm/reference/prisma-config-reference
  */
 
-import { loadEnvConfig } from "@next/env";
 import { defineConfig } from "prisma/config";
-
-// Load environment variables from .env file
-loadEnvConfig(process.cwd());
+import 'dotenv/config';
 
 /**
  * Prisma configuration using defineConfig helper.
@@ -36,6 +33,6 @@ export default defineConfig({
   // Migrations configuration
   migrations: {
     path: "prisma/migrations",
-    seed: "npx tsx prisma/seed.ts",
+    seed: "tsx prisma/seed.ts",
   },
 });

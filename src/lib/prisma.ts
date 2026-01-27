@@ -13,7 +13,7 @@
 
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { env } from "@/env";
+
 
 // Extend the global object to include the Prisma client
 const globalForPrisma = globalThis as unknown as {
@@ -25,12 +25,16 @@ const globalForPrisma = globalThis as unknown as {
  */
 function createPrismaClient(): PrismaClient {
   // Create the PostgreSQL adapter with the validated connection URL
-  const adapter = new PrismaPg({ connectionString: env.DATABASE_URL });
+  const url = process.env.DATABASE_URL;
+  if (!url) {
+    throw new Error("DATABASE_URL environment variable is not set");
+  }
+  const adapter = new PrismaPg({ connectionString: url });
 
   return new PrismaClient({
     adapter,
     log:
-      env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
+      process.env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
   });
 }
 
@@ -41,7 +45,7 @@ function createPrismaClient(): PrismaClient {
 export const prisma = globalForPrisma.prisma ?? createPrismaClient();
 
 // Store the client globally in development to enable reuse across hot reloads
-if (env.NODE_ENV !== "production") {
+if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = prisma;
 }
 

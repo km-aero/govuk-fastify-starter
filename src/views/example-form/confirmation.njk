@@ -1,0 +1,30 @@
+{% extends "layout.njk" %}
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+
+{% block pageTitle %}
+  Form submitted - {{ serviceName }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ govukPanel({
+        titleText: "Form submitted",
+        html: "Your reference number<br><strong>HDJ2123F</strong>"
+      }) }}
+
+      <p class="govuk-body">We have sent a confirmation email to <strong>{{ email }}</strong>.</p>
+
+      <h2 class="govuk-heading-m">What happens next</h2>
+      <p class="govuk-body">We will contact you within 2 working days.</p>
+
+      <p class="govuk-body">
+        <a href="/" class="govuk-link">Return to homepage</a>
+      </p>
+      
+      <p class="govuk-body">
+        <a href="/example-form" class="govuk-link">Submit another form</a>
+      </p>
+    </div>
+  </div>
+{% endblock %}

@@ -10,8 +10,8 @@ test.describe("Homepage", () => {
   test("has correct title", async ({ page }) => {
     await page.goto("/");
 
-    // Title should be "Home" (from metadata)
-    await expect(page).toHaveTitle("Home");
+    // Title should match Fastify app
+    await expect(page).toHaveTitle("Home - GOV.UK Fastify Starter - GOV.UK");
   });
 
   test("displays GOV.UK header with crown logo", async ({ page }) => {
@@ -21,14 +21,15 @@ test.describe("Homepage", () => {
     const header = page.locator(".govuk-header");
     await expect(header).toBeVisible();
 
-    // Check GOV.UK text is present
-    await expect(page.locator(".govuk-header__logotype-text")).toContainText(
+    // Check GOV.UK logo is present (SVG with aria-label)
+    await expect(page.locator(".govuk-header__logotype")).toHaveAttribute(
+      "aria-label",
       "GOV.UK"
     );
 
     // Check service name is present
     await expect(page.locator(".govuk-header__service-name")).toContainText(
-      "Service name"
+      "GOV.UK Fastify Starter"
     );
   });
 
@@ -44,7 +45,7 @@ test.describe("Homepage", () => {
     await page.goto("/");
 
     const heading = page.locator("h1");
-    await expect(heading).toContainText("GOV.UK Next.js Starter");
+    await expect(heading).toContainText("GOV.UK Fastify Starter");
   });
 
   test("has skip link for accessibility", async ({ page }) => {
