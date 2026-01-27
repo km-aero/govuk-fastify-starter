@@ -11,6 +11,7 @@ A production-ready Fastify + TypeScript starter project for building GOV.UK Desi
 - ✅ **Zod 4** for type-safe form validation
 - ✅ **Accessible by default** checking WCAG 2.2 AA standards
 - ✅ **Native Environment Loading** support (via `dotenv` and system variables)
+- ✅ **Security Headers** using `@fastify/helmet`
 
 ## Prerequisites
 
@@ -135,7 +136,7 @@ govuk-fastify-starter/
 | `npm run dev` | Start development server with file watching |
 | `npm run build` | Compile TypeScript to JavaScript in `dist/` |
 | `npm run start` | Start production server from `dist/` |
-| `npm run lint` | Run ESLint |
+| `npm run lint` | Run ESLint to check code quality |
 | `npm run db:push` | Push schema changes to database |
 | `npm run db:seed` | Seed database |
 | `npm run db:studio` | Open Prisma Studio GUI |

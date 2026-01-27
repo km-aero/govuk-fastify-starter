@@ -90,7 +90,8 @@ describe('Server Integration Tests', () => {
             id: '1',
             createdAt: new Date(),
             ...validData
-        } as any);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } as unknown as any);
 
         const response = await app.inject({
             method: 'POST',

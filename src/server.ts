@@ -1,9 +1,10 @@
-import Fastify, { FastifyInstance } from 'fastify';
+import Fastify from 'fastify';
 import path from 'path';
 import fastifyCompress from '@fastify/compress';
 import fastifyStatic from '@fastify/static';
 import fastifyFormbody from '@fastify/formbody';
 import fastifyEnv from '@fastify/env';
+import fastifyHelmet from '@fastify/helmet';
 import nunjucksPlugin from './plugins/nunjucks.js';
 
 
@@ -32,7 +33,7 @@ const options = {
   dotenv: true // Load .env if present, but don't fail if missing (handled by library/schema validation)
 };
 
-export async function buildApp(opts: any = {}) {
+export async function buildApp(opts: import('fastify').FastifyServerOptions = {}) {
   const app = Fastify({
     logger: process.env.NODE_ENV === 'development' ? {
       transport: {
@@ -48,6 +49,28 @@ export async function buildApp(opts: any = {}) {
 
   // Register Plugins
   await app.register(fastifyEnv, options);
+  await app.register(fastifyHelmet, {
+    enableCSPNonces: true,
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'"],
+        styleSrc: ["'self'"],
+        imgSrc: ["'self'", "data:"], // Images
+        fontSrc: ["'self'", "data:"], // Fonts
+      }
+    }
+  });
+  
+  // Make CSP nonce available to Nunjucks views
+  app.addHook('onRequest', async (req, reply) => {
+    // @ts-expect-error - cspNonce is added by fastify-helmet middleware
+    reply.locals = reply.locals || {};
+    // @ts-expect-error - cspNonce is added by fastify-helmet middleware
+    reply.locals.scriptNonce = reply.cspNonce.script;
+    // @ts-expect-error - cspNonce is added by fastify-helmet middleware
+    reply.locals.styleNonce = reply.cspNonce.style;
+  });
   await app.register(fastifyCompress);
   await app.register(fastifyFormbody);
   await app.register(nunjucksPlugin);
@@ -82,9 +105,8 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       await server.ready();
 
       // Start server
-      // @ts-ignore - config is added by fastify-env
+      // @ts-expect-error - config is added by fastify-env
       const port = server.config.PORT;
-      // @ts-ignore - config is added by fastify-env
       await server.listen({ port, host: '0.0.0.0' });
       console.log(`Server listening at http://localhost:${port}`);
     } catch (err) {
