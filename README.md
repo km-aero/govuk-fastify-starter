@@ -10,13 +10,13 @@ A production-ready Fastify + TypeScript starter project for building GOV.UK Desi
 - ✅ **Prisma 7.3** ORM with PostgreSQL support
 - ✅ **Zod 4** for type-safe form validation
 - ✅ **Accessible by default** checking WCAG 2.2 AA standards
-- ✅ **Native Environment Loading** using Node.js `--env-file` (Node 20+)
+- ✅ **Native Environment Loading** support (via `dotenv` and system variables)
 
 ## Prerequisites
 
 Before you begin, ensure you have the following installed:
 
-- [Node.js](https://nodejs.org/) v20.0.0 or later (Required for `--env-file` support)
+- [Node.js](https://nodejs.org/) v20.0.0 or later
 - [PostgreSQL](https://www.postgresql.org/) v14 or later
 - npm package manager
 
@@ -81,7 +81,7 @@ npm run build
 npm run dev
 ```
 
-The server uses Node's native `--env-file=.env` flag to load environment variables.
+The server automatically loads environment variables from `.env` if present, or uses system environment variables.
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Project Structure
@@ -99,6 +99,10 @@ govuk-fastify-starter/
 ├── scripts/
 │   └── copy-govuk-assets.js  # Asset copy script
 ├── src/
+│   ├── content/          # Site content (copy)
+│   │   ├── common.ts
+│   │   ├── home.ts
+│   │   └── example-form.ts
 │   ├── lib/
 │   │   ├── prisma.ts         # Database client
 │   │   └── validation.ts     # Zod schemas
@@ -111,11 +115,17 @@ govuk-fastify-starter/
 │   │   ├── layout.njk        # Base layout
 │   │   ├── index.njk
 │   │   └── example-form/
-│   ├── env.ts                # (Removed - using fastify-env)
 │   └── server.ts             # App entry point
+├── tests/
+│   ├── e2e/                  # Playwright E2E tests
+│   ├── integration/          # API integration tests
+│   └── unit/                 # Unit tests
 ├── .env.example
 ├── package.json
-└── tsconfig.json
+├── playwright.config.ts
+├── prisma.config.ts
+├── tsconfig.json
+└── vitest.config.ts
 ```
 
 ## Available Scripts
@@ -227,9 +237,9 @@ server.post('/submit', async (request, reply) => {
 
 ## Environment Variables
 
-We use **Native Node.js Environment Loading** and **Fastify Env** for validation.
+We use **Fastify Env** for environment variable validation and loading.
 
-- **Loading**: `node --env-file=.env` injects variables into `process.env`.
+- **Loading**: Variables are loaded from a locally present `.env` file (using `dotenv`) or from system environment variables (production).
 - **Validation**: `@fastify/env` validates `process.env` against a JSON schema on server startup.
 
 **Required Variables:**
