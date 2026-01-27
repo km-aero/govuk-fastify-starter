@@ -21,7 +21,7 @@ export default fp(async (fastify) => {
       noCache: process.env.NODE_ENV === 'development',
       onConfigure: (env: nunjucks.Environment) => {
         // Global variables expected by GOV.UK Frontend
-        env.addGlobal('assetPath', '/assets/');
+        env.addGlobal('assetPath', '/assets');
         env.addGlobal('serviceName', 'GOV.UK Fastify Starter');
         env.addGlobal('serviceUrl', '/');
         

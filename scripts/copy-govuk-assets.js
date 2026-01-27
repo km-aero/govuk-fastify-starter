@@ -62,9 +62,9 @@ try {
   if (existsSync(sourceAssetsDir)) {
     console.log("📦 Copying GOV.UK Frontend assets...");
     copyDir(sourceAssetsDir, targetAssetsDir);
-    console.log("✅ Assets copied to ", targetAssetsDir);
+    console.log("✅ Assets copied to", targetAssetsDir);
   } else {
-    console.warn("⚠️  Assets dir not found: ", sourceAssetsDir);
+    console.warn("⚠️  Assets dir not found:", sourceAssetsDir);
   }
 
   // Copy JS
@@ -74,12 +74,12 @@ try {
       mkdirSync(targetJsDir, { recursive: true });
     }
     copyFileSync(sourceJs, targetJs);
-    console.log("✅ JS copied to ", targetJs);
+    console.log("✅ JS copied to", targetJs);
   } else {
-    console.warn("⚠️  JS file not found: ", sourceJs);
+    console.warn("⚠️  JS file not found:", sourceJs);
   }
 
 } catch (error) {
-  console.error("❌ Error copying assets: ", error.message);
+  console.error("❌ Error copying assets:", error.message);
   process.exit(1);
 }
