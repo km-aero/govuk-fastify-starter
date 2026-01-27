@@ -1,7 +1,7 @@
 {
-  "name": "govuk-next-starter",
+  "name": "govuk-fastify-starter",
   "version": "1.0.0",
-  "description": "Next.js + TypeScript starter project for GOV.UK Design System compliant websites",
+  "description": "Fastify + TypeScript starter project for GOV.UK Design System compliant websites",
   "private": true,
   "type": "module",
   "scripts": {
