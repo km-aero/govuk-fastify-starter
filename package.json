@@ -22,7 +22,7 @@
     "db:studio": "prisma studio",
     "postinstall": "prisma generate && npm run copy-assets",
     "copy-assets": "node scripts/copy-govuk-assets.js",
-    "build:css": "sass --load-path=node_modules src/styles/main.scss public/stylesheets/main.css"
+    "build:css": "sass --load-path=node_modules --style=compressed src/styles/main.scss public/stylesheets/main.css"
   },
   "dependencies": {
     "@fastify/env": "^5.0.3",
