@@ -31,8 +31,8 @@ datasource db {
 // Stores contact form submissions with explicit columns for each field.
 // This allows efficient querying and filtering by individual fields.
 model ContactSubmission {
-  /// Unique identifier for the submission (UUID)
-  id        String   @id @default(uuid())
+  /// Unique identifier for the submission (CUID)
+  id        String   @id @default(cuid())
 
   /// Full name of the person submitting
   fullName  String
