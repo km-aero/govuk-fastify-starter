@@ -1,19 +1,22 @@
 import { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import prisma from '../lib/prisma.js';
+import { contactFormContent } from '../content/example-form.js';
 
 // Schema for validation
 const contactSchema = z.object({
-  fullName: z.string().min(1, 'Enter your full name'),
-  email: z.string().email('Enter an email address in the correct format'),
-  subject: z.string().min(1, 'Select a subject'),
-  message: z.string().min(10, 'Message must be at least 10 characters').max(1000, 'Message must be less than 1000 characters'),
+  fullName: z.string().min(1, contactFormContent.fields.fullName.error.required),
+  email: z.string().email(contactFormContent.fields.email.error.invalid),
+  subject: z.string().min(1, contactFormContent.fields.subject.error.required),
+  message: z.string()
+    .min(10, contactFormContent.fields.message.error.tooShort)
+    .max(1000, contactFormContent.fields.message.error.tooLong),
 });
 
 export default async function (fastify: FastifyInstance) {
   // GET /example-form
   fastify.get('/example-form', async (request, reply) => {
-    return reply.view('example-form/index.njk');
+    return reply.view('example-form/index.njk', { content: contactFormContent });
   });
 
   // POST /example-form
@@ -45,6 +48,7 @@ export default async function (fastify: FastifyInstance) {
         values: data,
         errors: fieldErrors,
         errorSummary: errorSummary,
+        content: contactFormContent,
       });
     }
 
@@ -71,6 +75,6 @@ export default async function (fastify: FastifyInstance) {
   // GET /example-form/confirmation
   fastify.get('/example-form/confirmation', async (request, reply) => {
       const { email } = request.query as { email?: string };
-      return reply.view('example-form/confirmation.njk', { email });
+      return reply.view('example-form/confirmation.njk', { email, content: contactFormContent });
   });
 }

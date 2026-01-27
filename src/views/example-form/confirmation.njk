@@ -2,28 +2,28 @@
 {% from "govuk/components/panel/macro.njk" import govukPanel %}
 
 {% block pageTitle %}
-  Form submitted - {{ serviceName }}
+  {{ content.confirmation.title }} - {{ serviceName }}
 {% endblock %}
 
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       {{ govukPanel({
-        titleText: "Form submitted",
-        html: "Your reference number<br><strong>HDJ2123F</strong>"
+        titleText: content.confirmation.panelTitle,
+        html: content.confirmation.panelBody
       }) }}
 
-      <p class="govuk-body">We have sent a confirmation email to <strong>{{ email }}</strong>.</p>
+      <p class="govuk-body">{{ content.confirmation.body }} <strong>{{ email }}</strong>.</p>
 
-      <h2 class="govuk-heading-m">What happens next</h2>
-      <p class="govuk-body">We will contact you within 2 working days.</p>
+      <h2 class="govuk-heading-m">{{ content.confirmation.whatHappensNext }}</h2>
+      <p class="govuk-body">{{ content.confirmation.whatHappensNextBody }}</p>
 
       <p class="govuk-body">
-        <a href="/" class="govuk-link">Return to homepage</a>
+        <a href="/" class="govuk-link">{{ content.confirmation.returnLink }}</a>
       </p>
       
       <p class="govuk-body">
-        <a href="/example-form" class="govuk-link">Submit another form</a>
+        <a href="/example-form" class="govuk-link">{{ content.confirmation.submitAnotherLink }}</a>
       </p>
     </div>
   </div>

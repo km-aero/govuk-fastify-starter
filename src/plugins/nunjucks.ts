@@ -2,6 +2,7 @@ import fp from 'fastify-plugin';
 import fastifyView from '@fastify/view';
 import nunjucks from 'nunjucks';
 import path from 'path';
+import { commonContent } from '../content/common.js';
 
 export default fp(async (fastify) => {
   const templates = [
@@ -22,8 +23,9 @@ export default fp(async (fastify) => {
       onConfigure: (env: nunjucks.Environment) => {
         // Global variables expected by GOV.UK Frontend
         env.addGlobal('assetPath', '/assets');
-        env.addGlobal('serviceName', 'GOV.UK Fastify Starter');
+        env.addGlobal('serviceName', commonContent.serviceName);
         env.addGlobal('serviceUrl', '/');
+        env.addGlobal('commonContent', commonContent);
         
         // Custom globals
         env.addGlobal('isDevelopment', process.env.NODE_ENV === 'development');

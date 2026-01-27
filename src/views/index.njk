@@ -2,32 +2,30 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% block pageTitle %}
-  Home - {{ serviceName }} - GOV.UK
+  {{ content.title }} - {{ serviceName }} - GOV.UK
 {% endblock %}
 
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-xl">GOV.UK Fastify Starter</h1>
+      <h1 class="govuk-heading-xl">{{ content.heading }}</h1>
       
       <p class="govuk-body">
-        This is a starter project for building GOV.UK Design System compliant websites using Fastify, TypeScript, and Nunjucks.
+        {{ content.intro }}
       </p>
 
       <p class="govuk-body">
-        It includes:
+        {{ content.featuresIntro }}
       </p>
 
       <ul class="govuk-list govuk-list--bullet">
-        <li>Fastify server</li>
-        <li>Nunjucks templates</li>
-        <li>TypeScript</li>
-        <li>GOV.UK Frontend (styles and scripts)</li>
-        <li>PostgreSQL + Prisma integration</li>
+        {% for feature in content.featuresListValues %}
+          <li>{{ feature }}</li>
+        {% endfor %}
       </ul>
 
       {{ govukButton({
-        text: "Start now",
+        text: content.startButton,
         href: "/example-form",
         isStartButton: true
       }) }}

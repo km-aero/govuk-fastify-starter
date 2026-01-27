@@ -21,9 +21,9 @@
   <div class="govuk-width-container">
     {{ govukPhaseBanner({
       tag: {
-        text: "Beta"
+        text: commonContent.phaseBanner.tag
       },
-      html: 'This is a new service – your <a class="govuk-link" href="#">feedback</a> will help us to improve it.'
+      html: commonContent.phaseBanner.text
     }) }}
   </div>
 {% endblock %}

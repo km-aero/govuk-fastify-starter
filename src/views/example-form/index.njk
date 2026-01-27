@@ -57,31 +57,27 @@
           type: "email",
           autocomplete: "email",
           value: values.email,
-          errorMessage: errors.email
+          errorMessage: errors.email and {
+            text: errors.email.text
+          }
         }) }}
 
         {{ govukSelect({
             id: "subject",
             name: "subject",
             label: {
-                text: "What is your message about?",
-                classes: "govuk-label--m"
+                text: content.fields.subject.label
             },
             items: [
                 {
                   value: "",
-                  text: "Choose a subject",
+                  text: "Choose option",
                   selected: true
                 },
                 {
-                  value: "general",
-                  text: "General enquiry",
-                  selected: values.subject == "general"
-                },
-                {
-                  value: "complaint",
-                  text: "Complaint",
-                  selected: values.subject == "complaint"
+                  value: "help",
+                  text: "Help",
+                  selected: values.subject == "help"
                 },
                 {
                   value: "feedback",
@@ -89,22 +85,25 @@
                   selected: values.subject == "feedback"
                 }
             ],
-            errorMessage: errors.subject
+            errorMessage: errors.subject and {
+              text: errors.subject.text
+            }
         }) }}
 
         {{ govukTextarea({
           name: "message",
           id: "message",
           label: {
-            text: "Message",
-            classes: "govuk-label--m"
+            text: content.fields.message.label
           },
           value: values.message,
-          errorMessage: errors.message
+          errorMessage: errors.message and {
+            text: errors.message.text
+          }
         }) }}
 
         {{ govukButton({
-          text: "Submit"
+          text: content.submitButton
         }) }}
 
       </form>

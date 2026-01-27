@@ -63,7 +63,7 @@ test.describe("Contact Form", () => {
     // Fill in the form with invalid email
     await page.fill("#fullName", "Test User");
     await page.fill("#email", "not-an-email");
-    await page.selectOption("#subject", "general");
+    await page.selectOption("#subject", "help");
     await page.fill(
       "#message",
       "This is a test message with enough characters.",
@@ -80,7 +80,7 @@ test.describe("Contact Form", () => {
     // Fill in the form with valid data
     await page.fill("#fullName", "Test User");
     await page.fill("#email", "test@example.gov.uk");
-    await page.selectOption("#subject", "general");
+    await page.selectOption("#subject", "help");
     await page.fill(
       "#message",
       "This is a test message for the end-to-end test.",
@@ -125,7 +125,7 @@ test.describe("Contact Form", () => {
     // Submit a valid form
     await page.fill("#fullName", "Test User");
     await page.fill("#email", "test@example.gov.uk");
-    await page.selectOption("#subject", "general");
+    await page.selectOption("#subject", "help");
     await page.fill("#message", "Testing confirmation page links.");
 
     await page.click('button[type="submit"]');
