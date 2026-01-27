@@ -31,15 +31,18 @@ export default async function (fastify: FastifyInstance) {
       // Map Zod errors to GOV.UK format
       const errors = result.error.flatten().fieldErrors;
       
-      const errorSummary = Object.entries(errors).map(([params, msg]) => ({
-        href: `#${params}`,
-        text: msg?.[0] || 'Invalid value',
-      }));
-      
+      const errorSummary: { href: string; text: string }[] = [];
       const fieldErrors: Record<string, { text: string }> = {};
+
       for (const [key, msgs] of Object.entries(errors)) {
+        const text = msgs?.[0] || 'Invalid value';
+        errorSummary.push({
+          href: `#${key}`,
+          text: text,
+        });
+
         if (msgs && msgs.length > 0) {
-           fieldErrors[key] = { text: msgs[0] };
+          fieldErrors[key] = { text: msgs[0] };
         }
       }
 
