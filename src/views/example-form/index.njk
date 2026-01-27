@@ -32,6 +32,7 @@
       <h1 class="govuk-heading-xl">Contact us</h1>
 
       <form action="/example-form" method="post" novalidate>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         
         {{ govukInput({
           label: {

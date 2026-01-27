@@ -5,6 +5,9 @@ import fastifyStatic from '@fastify/static';
 import fastifyFormbody from '@fastify/formbody';
 import fastifyEnv from '@fastify/env';
 import fastifyHelmet from '@fastify/helmet';
+import fastifyRateLimit from '@fastify/rate-limit';
+import fastifyCsrfProtection from '@fastify/csrf-protection';
+import fastifyCookie from '@fastify/cookie';
 import nunjucksPlugin from './plugins/nunjucks.js';
 
 
@@ -23,6 +26,10 @@ const schema = {
     PORT: {
       type: 'number',
       default: 3000
+    },
+    COOKIE_SECRET: {
+      type: 'string',
+      default: 'a-very-long-secret-key-for-cookies-must-be-at-least-32-chars'
     }
   }
 };
@@ -61,8 +68,33 @@ export async function buildApp(opts: import('fastify').FastifyServerOptions = {}
       }
     }
   });
+
+  // Rate Limiting
+  await app.register(fastifyRateLimit, {
+    max: 100,
+    timeWindow: '1 minute'
+  });
+
+  // CSRF Protection
+  await app.register(fastifyCookie, {
+    secret: process.env.COOKIE_SECRET || 'a-very-long-secret-key-for-cookies-must-be-at-least-32-chars'
+  });
+
+  await app.register(fastifyCsrfProtection, {
+    cookieOpts: { signed: true }
+  });
+
+  // Protect all updates with CSRF
+  if (process.env.NODE_ENV !== 'test') {
+    app.addHook('preValidation', async (req, reply) => {
+      if (req.method !== 'GET' && req.method !== 'HEAD' && req.method !== 'OPTIONS' && req.method !== 'TRACE') {
+        // @ts-expect-error - csrfProtection is added by fastify-csrf-protection
+        await app.csrfProtection(req, reply);
+      }
+    });
+  }
   
-  // Make CSP nonce available to Nunjucks views
+  // Make CSP nonce and CSRF token available to Nunjucks views
   app.addHook('onRequest', async (req, reply) => {
     // @ts-expect-error - cspNonce is added by fastify-helmet middleware
     reply.locals = reply.locals || {};
@@ -70,6 +102,11 @@ export async function buildApp(opts: import('fastify').FastifyServerOptions = {}
     reply.locals.scriptNonce = reply.cspNonce.script;
     // @ts-expect-error - cspNonce is added by fastify-helmet middleware
     reply.locals.styleNonce = reply.cspNonce.style;
+
+    // Generate CSRF token
+    const csrfToken = await reply.generateCsrf();
+    // @ts-expect-error - locals is not typed in default fastify reply
+    reply.locals.csrfToken = csrfToken;
   });
   await app.register(fastifyCompress);
   await app.register(fastifyFormbody);
