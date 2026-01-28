@@ -1,7 +1,8 @@
 import { FastifyInstance } from 'fastify';
 import { z } from 'zod';
-import prisma from '../lib/prisma.js';
-import { contactFormContent } from '../content/example-form.js';
+import prisma from '../../lib/prisma.js';
+import { contactFormContent } from '../../content/example-form/index.js';
+import { commonContent } from '../../content/common.js';
 
 // Schema for validation
 const contactSchema = z.object({
@@ -16,7 +17,7 @@ const contactSchema = z.object({
 export default async function (fastify: FastifyInstance) {
   // GET /example-form
   fastify.get('/example-form', async (request, reply) => {
-    return reply.view('example-form/index.njk', { content: contactFormContent });
+    return reply.view('example-form/index.njk', { content: contactFormContent, common: commonContent });
   });
 
   // POST /example-form
@@ -55,6 +56,7 @@ export default async function (fastify: FastifyInstance) {
         errors: fieldErrors,
         errorSummary: errorSummary,
         content: contactFormContent,
+        common: commonContent,
       });
     }
 
@@ -76,11 +78,5 @@ export default async function (fastify: FastifyInstance) {
     // Redirect to success
     const query = new URLSearchParams({ email: result.data.email });
     return reply.redirect(`/example-form/confirmation?${query.toString()}`);
-  });
-
-  // GET /example-form/confirmation
-  fastify.get('/example-form/confirmation', async (request, reply) => {
-      const { email } = request.query as { email?: string };
-      return reply.view('example-form/confirmation.njk', { email, content: contactFormContent });
   });
 }

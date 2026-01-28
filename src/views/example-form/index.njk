@@ -7,12 +7,12 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 
 {% block pageTitle %}
-  {% if errorSummary %}Error: {% endif %}Contact us - {{ serviceName }} - GOV.UK
+  {% if errorSummary %}{{ common.errorPrefix }}{% endif %}{{ content.title }} - {{ serviceName }} - GOV.UK
 {% endblock %}
 
 {% block beforeContent %}
   {{ govukBackLink({
-    text: "Back",
+    text: common.backLink,
     href: "/"
   }) }}
 {% endblock %}
@@ -23,20 +23,20 @@
       
       {% if errorSummary %}
         {{ govukErrorSummary({
-          titleText: "There is a problem",
+          titleText: common.errorTitle,
           errorList: errorSummary,
           attributes: { role: "alert" }
         }) }}
       {% endif %}
 
-      <h1 class="govuk-heading-xl">Contact us</h1>
+      <h1 class="govuk-heading-xl">{{ content.title }}</h1>
 
       <form action="/example-form" method="post" novalidate>
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         
         {{ govukInput({
           label: {
-            text: "Full name",
+            text: content.fields.fullName.label,
             classes: "govuk-label--m"
           },
           id: "fullName",
@@ -47,11 +47,11 @@
 
         {{ govukInput({
           label: {
-            text: "Email address",
+            text: content.fields.email.label,
             classes: "govuk-label--m"
           },
           hint: {
-            text: "We will use this to contact you"
+            text: content.fields.email.hint
           },
           id: "email",
           name: "email",
@@ -72,17 +72,17 @@
             items: [
                 {
                   value: "",
-                  text: "Choose option",
+                  text: content.fields.subject.options.default,
                   selected: true
                 },
                 {
                   value: "help",
-                  text: "Help",
+                  text: content.fields.subject.options.help,
                   selected: values.subject == "help"
                 },
                 {
                   value: "feedback",
-                  text: "Feedback",
+                  text: content.fields.subject.options.feedback,
                   selected: values.subject == "feedback"
                 }
             ],
@@ -104,7 +104,7 @@
         }) }}
 
         {{ govukButton({
-          text: content.submitButton
+          text: common.buttons.saveAndContinue
         }) }}
 
       </form>

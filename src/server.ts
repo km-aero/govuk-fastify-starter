@@ -137,8 +137,11 @@ export async function buildApp(opts: import('fastify').FastifyServerOptions = {}
   const { default: indexRoutes } = await import('./routes/index.js');
   await app.register(indexRoutes);
 
-  const { default: exampleFormRoutes } = await import('./routes/example-form.js');
+  const { default: exampleFormRoutes } = await import('./routes/example-form/index.js');
   await app.register(exampleFormRoutes);
+
+  const { default: exampleFormConfirmationRoutes } = await import('./routes/example-form/confirmation.js');
+  await app.register(exampleFormConfirmationRoutes);
 
   // Basic health check
   app.get('/health', async () => ({ status: 'ok' }));

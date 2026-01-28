@@ -2,28 +2,28 @@
 {% from "govuk/components/panel/macro.njk" import govukPanel %}
 
 {% block pageTitle %}
-  {{ content.confirmation.title }} - {{ serviceName }}
+  {{ content.title }} - {{ serviceName }}
 {% endblock %}
 
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       {{ govukPanel({
-        titleText: content.confirmation.panelTitle,
-        html: content.confirmation.panelBody
+        titleText: content.panelTitle,
+        html: content.panelBody
       }) }}
 
-      <p class="govuk-body">{{ content.confirmation.body }} <strong>{{ email }}</strong>.</p>
+      <p class="govuk-body">{{ content.body }} <strong>{{ email }}</strong>.</p>
 
-      <h2 class="govuk-heading-m">{{ content.confirmation.whatHappensNext }}</h2>
-      <p class="govuk-body">{{ content.confirmation.whatHappensNextBody }}</p>
+      <h2 class="govuk-heading-m">{{ content.whatHappensNext }}</h2>
+      <p class="govuk-body">{{ content.whatHappensNextBody }}</p>
 
       <p class="govuk-body">
-        <a href="/" class="govuk-link">{{ content.confirmation.returnLink }}</a>
+        <a href="/" class="govuk-link">{{ content.returnLink }}</a>
       </p>
       
       <p class="govuk-body">
-        <a href="/example-form" class="govuk-link">{{ content.confirmation.submitAnotherLink }}</a>
+        <a href="/example-form" class="govuk-link">{{ content.submitAnotherLink }}</a>
       </p>
     </div>
   </div>
