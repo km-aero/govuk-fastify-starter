@@ -6,7 +6,7 @@ import { contactFormContent } from '../content/example-form.js';
 // Schema for validation
 const contactSchema = z.object({
   fullName: z.string().min(1, contactFormContent.fields.fullName.error.required),
-  email: z.string().email(contactFormContent.fields.email.error.invalid),
+  email: z.email(contactFormContent.fields.email.error.invalid),
   subject: z.string().min(1, contactFormContent.fields.subject.error.required),
   message: z.string()
     .min(10, contactFormContent.fields.message.error.tooShort)

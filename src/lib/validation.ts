@@ -23,13 +23,10 @@ export const contactFormSchema = z.object({
     .max(200, { message: "Full name must be 200 characters or less" }),
 
   email: z
-    .string()
-    .min(1, { message: "Enter your email address" })
-    .email({ message: "Enter a valid email address" }),
+    .email({ message: "Enter a valid email address" })
+    .min(1, { message: "Enter your email address" }),
 
-  subject: z
-    .string()
-    .min(1, { message: "Select a subject" }),
+  subject: z.string().min(1, { message: "Select a subject" }),
 
   message: z
     .string()
@@ -93,7 +90,7 @@ export type FeedbackFormData = z.infer<typeof feedbackFormSchema>;
  */
 export function validateFormData<T extends z.ZodSchema>(
   schema: T,
-  data: unknown
+  data: unknown,
 ): {
   success: boolean;
   data?: z.infer<T>;
