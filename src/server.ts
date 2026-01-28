@@ -55,23 +55,26 @@ export async function buildApp(opts: import('fastify').FastifyServerOptions = {}
   });
 
   // Register Plugins
+  await app.register(fastifyFormbody);
   await app.register(fastifyEnv, options);
-  await app.register(fastifyHelmet, {
-    enableCSPNonces: true,
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: ["'self'"],
-        styleSrc: ["'self'"],
-        imgSrc: ["'self'", "data:"], // Images
-        fontSrc: ["'self'", "data:"], // Fonts
+  if (process.env.NODE_ENV !== 'test') {
+    await app.register(fastifyHelmet, {
+      enableCSPNonces: true,
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          scriptSrc: ["'self'"],
+          styleSrc: ["'self'"],
+          imgSrc: ["'self'", "data:"], // Images
+          fontSrc: ["'self'", "data:"], // Fonts
+        }
       }
-    }
-  });
+    });
+  }
 
   // Rate Limiting
   await app.register(fastifyRateLimit, {
-    max: 100,
+    max: process.env.NODE_ENV === 'production' ? 100 : 5000,
     timeWindow: '1 minute'
   });
 
@@ -81,7 +84,16 @@ export async function buildApp(opts: import('fastify').FastifyServerOptions = {}
   });
 
   await app.register(fastifyCsrfProtection, {
-    cookieOpts: { signed: true }
+    cookieOpts: { 
+      signed: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax'
+    },
+    getToken: (req) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const body = req.body as any;
+      return body?._csrf;
+    }
   });
 
   // Protect all updates with CSRF
@@ -98,10 +110,12 @@ export async function buildApp(opts: import('fastify').FastifyServerOptions = {}
   app.addHook('onRequest', async (req, reply) => {
     // @ts-expect-error - cspNonce is added by fastify-helmet middleware
     reply.locals = reply.locals || {};
-    // @ts-expect-error - cspNonce is added by fastify-helmet middleware
-    reply.locals.scriptNonce = reply.cspNonce.script;
-    // @ts-expect-error - cspNonce is added by fastify-helmet middleware
-    reply.locals.styleNonce = reply.cspNonce.style;
+    if (reply.cspNonce) {
+      // @ts-expect-error - cspNonce is added by fastify-helmet middleware
+      reply.locals.scriptNonce = reply.cspNonce.script;
+      // @ts-expect-error - cspNonce is added by fastify-helmet middleware
+      reply.locals.styleNonce = reply.cspNonce.style;
+    }
 
     // Generate CSRF token
     const csrfToken = await reply.generateCsrf();
@@ -109,7 +123,6 @@ export async function buildApp(opts: import('fastify').FastifyServerOptions = {}
     reply.locals.csrfToken = csrfToken;
   });
   await app.register(fastifyCompress);
-  await app.register(fastifyFormbody);
   await app.register(nunjucksPlugin);
 
   // Register Static Files

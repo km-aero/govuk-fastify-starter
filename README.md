@@ -11,6 +11,8 @@ A production-ready Fastify + TypeScript starter project for building GOV.UK Desi
 - ✅ **Zod 4** for type-safe form validation
 - ✅ **Accessible by default** checking WCAG 2.2 AA standards
 - ✅ **Native Environment Loading** support (via `dotenv` and system variables)
+- ✅ **Rate Limiting** using `@fastify/rate-limit`
+- ✅ **CSRF Protection** using `@fastify/csrf-protection`
 - ✅ **Security Headers** using `@fastify/helmet`
 
 ## Prerequisites
@@ -122,6 +124,8 @@ govuk-fastify-starter/
 │   ├── integration/          # API integration tests
 │   └── unit/                 # Unit tests
 ├── .env.example
+├── audit-ci.jsonc
+├── eslint.config.mjs
 ├── package.json
 ├── playwright.config.ts
 ├── prisma.config.ts
@@ -251,6 +255,7 @@ We use **Fastify Env** for environment variable validation and loading.
 
 - `NODE_ENV`: Defaults to 'development'
 - `PORT`: Defaults to 3000
+- `COOKIE_SECRET`: Secret key for cookie signing (min 32 chars). Defaults to a development key if not set.
 
 ## Deployment
 
